@@ -13,13 +13,15 @@ docker_exec:
 	docker exec -it advertisement psql -U root
 
 migrate:
-	migrate create -ext sql -dir internal/schema/migration -seq init_schema
+	migrate create -ext sql -dir db/schema/migration -seq init_schema
 
 migrateUP:
-	migrate -path internal/schema/migration -database "postgresql://root:secret@localhost:5432/advertisement?sslmode=disable" -verbose up
+	migrate -path db/schema/migration -database "postgresql://root:secret@localhost:5432/advertisement?sslmode=disable" -verbose up
 
 migrateDown:
-	migrate -path internal/schema/migration -database "postgresql://root:secret@localhost:5432/advertisement?sslmode=disable" -verbose down
+	migrate -path db/schema/migration -database "postgresql://root:secret@localhost:5432/advertisement?sslmode=disable" -verbose down
 
+sqlc:
+	sqlc generate
 
-PHONY:  docker_run createDB dropDB docker_exec migrate migrateUP migrateDown
+PHONY:  docker_run createDB dropDB docker_exec migrate migrateUP migrateDown sqlc
