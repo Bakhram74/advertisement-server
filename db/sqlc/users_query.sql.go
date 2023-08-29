@@ -23,7 +23,7 @@ type CreateUserParams struct {
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, createUser, arg.Username, arg.PhoneNumber, arg.Password)
+	row := q.db.QueryRow(ctx, createUser, arg.Username, arg.PhoneNumber, arg.Password)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -50,7 +50,7 @@ type UpdateUserParams struct {
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
-	_, err := q.db.ExecContext(ctx, updateUser, arg.ID, arg.Username, arg.PhoneNumber)
+	_, err := q.db.Exec(ctx, updateUser, arg.ID, arg.Username, arg.PhoneNumber)
 	return err
 }
 
@@ -66,7 +66,7 @@ type UpdateUserPhoneParams struct {
 }
 
 func (q *Queries) UpdateUserPhone(ctx context.Context, arg UpdateUserPhoneParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, updateUserPhone, arg.ID, arg.PhoneNumber)
+	row := q.db.QueryRow(ctx, updateUserPhone, arg.ID, arg.PhoneNumber)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -92,7 +92,7 @@ type UpdateUsernameParams struct {
 }
 
 func (q *Queries) UpdateUsername(ctx context.Context, arg UpdateUsernameParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, updateUsername, arg.ID, arg.Username)
+	row := q.db.QueryRow(ctx, updateUsername, arg.ID, arg.Username)
 	var i User
 	err := row.Scan(
 		&i.ID,

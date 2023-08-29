@@ -5,8 +5,7 @@
 package db
 
 import (
-	"database/sql"
-	"time"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type User struct {
@@ -14,6 +13,6 @@ type User struct {
 	Username    string
 	PhoneNumber string
 	Password    string
-	Role        sql.NullString
-	CreatedAt   time.Time
+	Role        pgtype.Text
+	CreatedAt   pgtype.Timestamptz
 }
