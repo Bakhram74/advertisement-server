@@ -1,11 +1,13 @@
-version: 1
-packages:
-    - name: "db"
-      path: "./db/sqlc"
-      schema: "./db/schema/migration"
-      queries: "./db/query.sql"
-      engine: "postgresql"
-      emit_json_tags: true
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "db/query"
+    schema: "db/schema/migration"
+    gen:
+      go:
+        package: "db"
+        out: "db/sqlc"
+
 
 
 

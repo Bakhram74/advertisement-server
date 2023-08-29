@@ -1,17 +1,17 @@
 package config
 
 import (
-	"sync"
-
 	"github.com/Bakhram74/advertisement-server.git/pkg/logging"
 	"github.com/ilyakaznacheev/cleanenv"
+	_ "github.com/jackc/pgx/v5"
+	"sync"
 )
 
 type Config struct {
-	Host string `yaml:"host" env-default:"127.0.0.1"`
-	Port string `yaml:"port" env-default:"8080"`
+	Host string `json:"host" env-default:"127.0.0.1"`
+	Port string `json:"port" env-default:"8080"`
 
-	Storage StorageConfig `yaml:"storage"`
+	Storage StorageConfig `json:"storage"`
 }
 
 type StorageConfig struct {

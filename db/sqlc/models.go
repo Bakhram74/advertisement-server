@@ -10,10 +10,10 @@ import (
 )
 
 type User struct {
-	ID          int64          `json:"id"`
-	Username    string         `json:"username"`
-	PhoneNumber string         `json:"phone_number"`
-	Password    string         `json:"password"`
-	Role        sql.NullString `json:"role"`
-	CreatedAt   time.Time      `json:"created_at"`
+	ID          int64
+	Username    string
+	PhoneNumber string
+	Password    string
+	Role        sql.NullString
+	CreatedAt   time.Time
 }
