@@ -18,8 +18,8 @@ type StorageConfig struct {
 	Host     string `json:"host" env-default:"localhost"`
 	Port     string `json:"port" env-default:"5432"`
 	Database string `json:"database" env-default:"advertisement"`
-	Username string `json:"username" env-default:"localhost"`
-	Password string `json:"password" env-default:"1234"`
+	Username string `json:"username" env-default:"root"`
+	Password string `json:"password" env-default:"secret"`
 	SSLMode  string `json:"ssl_mode" env-default:"disable"`
 }
 

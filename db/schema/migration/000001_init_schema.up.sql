@@ -3,6 +3,7 @@ CREATE TABLE "users" (
                          "username" text NOT NULL,
                          "phone_number" text NOT NULL,
                          "password" text NOT NULL,
-                         "role" text DEFAULT (user),
+                         "role" text NOT NULL DEFAULT ('user'),
+                         "is_banned" bool NOT NULL DEFAULT (false),
                          "created_at" timestamptz NOT NULL DEFAULT (now())
 );

@@ -13,6 +13,7 @@ type User struct {
 	Username    string
 	PhoneNumber string
 	Password    string
-	Role        pgtype.Text
+	Role        string
+	IsBanned    bool
 	CreatedAt   pgtype.Timestamptz
 }

@@ -13,7 +13,7 @@ const createUser = `-- name: CreateUser :one
 INSERT INTO users ("username",
                    "phone_number",
                    "password")
-VALUES ($1, $2, $3) RETURNING id, username, phone_number, password, role, created_at
+VALUES ($1, $2, $3) RETURNING id, username, phone_number, password, role, is_banned, created_at
 `
 
 type CreateUserParams struct {
@@ -31,42 +31,41 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.PhoneNumber,
 		&i.Password,
 		&i.Role,
+		&i.IsBanned,
 		&i.CreatedAt,
 	)
 	return i, err
 }
 
-const updateUser = `-- name: UpdateUser :exec
+const partialUpdateUser = `-- name: PartialUpdateUser :one
 UPDATE users
-SET username     = $2,
-    phone_number = $3
-WHERE id = $1
+SET username = CASE WHEN $1::boolean THEN $2::TEXT ELSE username END,
+    phone_number  = CASE WHEN $3::boolean THEN $4::TEXT ELSE phone_number END,
+    password  = CASE WHEN $5::boolean THEN $6::TEXT ELSE password END
+WHERE id = $7
+RETURNING id, username, phone_number, password, role, is_banned, created_at
 `
 
-type UpdateUserParams struct {
-	ID          int64
-	Username    string
-	PhoneNumber string
+type PartialUpdateUserParams struct {
+	UpdateUsername    bool
+	Username          string
+	UpdatePhoneNumber bool
+	PhoneNumber       string
+	UpdatePassword    bool
+	Password          string
+	ID                int64
 }
 
-func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
-	_, err := q.db.Exec(ctx, updateUser, arg.ID, arg.Username, arg.PhoneNumber)
-	return err
-}
-
-const updateUserPhone = `-- name: UpdateUserPhone :one
-UPDATE users
-SET phone_number = $2
-WHERE id = $1 RETURNING id, username, phone_number, password, role, created_at
-`
-
-type UpdateUserPhoneParams struct {
-	ID          int64
-	PhoneNumber string
-}
-
-func (q *Queries) UpdateUserPhone(ctx context.Context, arg UpdateUserPhoneParams) (User, error) {
-	row := q.db.QueryRow(ctx, updateUserPhone, arg.ID, arg.PhoneNumber)
+func (q *Queries) PartialUpdateUser(ctx context.Context, arg PartialUpdateUserParams) (User, error) {
+	row := q.db.QueryRow(ctx, partialUpdateUser,
+		arg.UpdateUsername,
+		arg.Username,
+		arg.UpdatePhoneNumber,
+		arg.PhoneNumber,
+		arg.UpdatePassword,
+		arg.Password,
+		arg.ID,
+	)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -74,32 +73,7 @@ func (q *Queries) UpdateUserPhone(ctx context.Context, arg UpdateUserPhoneParams
 		&i.PhoneNumber,
 		&i.Password,
 		&i.Role,
-		&i.CreatedAt,
-	)
-	return i, err
-}
-
-const updateUsername = `-- name: UpdateUsername :one
-UPDATE users
-SET username = $2
-WHERE id = $1
-    RETURNING id, username, phone_number, password, role, created_at
-`
-
-type UpdateUsernameParams struct {
-	ID       int64
-	Username string
-}
-
-func (q *Queries) UpdateUsername(ctx context.Context, arg UpdateUsernameParams) (User, error) {
-	row := q.db.QueryRow(ctx, updateUsername, arg.ID, arg.Username)
-	var i User
-	err := row.Scan(
-		&i.ID,
-		&i.Username,
-		&i.PhoneNumber,
-		&i.Password,
-		&i.Role,
+		&i.IsBanned,
 		&i.CreatedAt,
 	)
 	return i, err

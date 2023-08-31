@@ -4,7 +4,7 @@ docker_run:
 	docker run --name advertisement -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -p 5432:5432 -d postgres
 
 createDB:
-	docker exec -it advertisement createdb --username=root --owner=root advertisement
+	docker exec -it advertisement createdb --username=root --owner=root
 
 dropDB:
 	docker exec -it advertisement dropdb advertisement
