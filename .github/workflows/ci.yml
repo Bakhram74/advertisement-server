@@ -45,7 +45,7 @@
                   which migrate
 
             - name: Run migrations
-              run: make migrateUp
+              run: make migrateUP
 
             - name: Test
               run: make test
