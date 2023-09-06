@@ -13,20 +13,3 @@ SET username = CASE WHEN @update_username::boolean THEN @username::TEXT ELSE use
 WHERE id = @id
 RETURNING *;
 
--- -- name: UpdateUsername :one
--- UPDATE users
--- SET username = $2
--- WHERE id = $1
---     RETURNING *;
---
---
--- -- name: UpdateUserPhone :one
--- UPDATE users
--- SET phone_number = $2
--- WHERE id = $1 RETURNING *;
---
--- -- name: UpdateUser :one
--- UPDATE users
--- SET username     = $2,
---     phone_number = $3
--- WHERE id = $1 RETURNING *;

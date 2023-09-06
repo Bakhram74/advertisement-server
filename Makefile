@@ -24,4 +24,9 @@ migrateDown:
 sqlc:
 	sqlc generate
 
-PHONY:  docker_run createDB dropDB docker_exec migrate migrateUP migrateDown sqlc
+test:
+	go test -v -cover ./...
+
+
+
+PHONY:  docker_run createDB dropDB docker_exec migrate migrateUP migrateDown sqlc test
