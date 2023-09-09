@@ -9,10 +9,12 @@ import (
 )
 
 func randomUser(t *testing.T) db.User {
+	hashedPassword, err := utils.HashPassword(utils.RandomString(8))
+	require.NoError(t, err)
 	arg := db.CreateUserParams{
-		Username:    utils.RandomString(6),
-		PhoneNumber: utils.RandomNumbers(9),
-		Password:    utils.RandomString(8),
+		Username:       utils.RandomString(6),
+		PhoneNumber:    utils.RandomNumbers(9),
+		HashedPassword: hashedPassword,
 	}
 
 	user, err := testQueries.CreateUser(context.Background(), arg)
@@ -23,7 +25,7 @@ func randomUser(t *testing.T) db.User {
 	require.Equal(t, false, user.IsBanned)
 	require.Equal(t, "user", user.Role)
 	require.Equal(t, arg.Username, user.Username)
-	require.Equal(t, arg.Password, user.Password)
+	require.Equal(t, arg.HashedPassword, user.HashedPassword)
 	require.Equal(t, arg.PhoneNumber, user.PhoneNumber)
 	return user
 }
@@ -34,13 +36,14 @@ func TestCreateUser(t *testing.T) {
 
 func TestUpdateUser(t *testing.T) {
 	user := randomUser(t)
+	hashedPassword, _ := utils.HashPassword(utils.RandomString(8))
 	params := db.PartialUpdateUserParams{
 		ID:                user.ID,
 		Username:          "Alex",
 		UpdateUsername:    true,
 		PhoneNumber:       utils.RandomNumbers(7),
 		UpdatePhoneNumber: true,
-		Password:          utils.RandomString(8),
+		Password:          hashedPassword,
 		UpdatePassword:    true,
 	}
 	updateUser, err := testQueries.PartialUpdateUser(context.Background(), params)
@@ -53,7 +56,7 @@ func TestUpdateUser(t *testing.T) {
 
 	require.NotEqual(t, user.Username, updateUser.Username)
 	require.NotEqual(t, user.PhoneNumber, updateUser.PhoneNumber)
-	require.NotEqual(t, user.Password, updateUser.Password)
+	require.NotEqual(t, user.HashedPassword, updateUser.HashedPassword)
 	require.Equal(t, "Alex", updateUser.Username)
 	require.Equal(t, 7, len(updateUser.PhoneNumber))
 }
@@ -73,7 +76,7 @@ func TestUpdateUserName(t *testing.T) {
 	require.Equal(t, false, user.IsBanned)
 	require.NotEqual(t, user.Username, updateUser.Username)
 	require.Equal(t, user.PhoneNumber, updateUser.PhoneNumber)
-	require.Equal(t, user.Password, updateUser.Password)
+	require.Equal(t, user.HashedPassword, updateUser.HashedPassword)
 	require.Equal(t, "Pedro", updateUser.Username)
 	require.Equal(t, user.PhoneNumber, updateUser.PhoneNumber)
 }
@@ -95,15 +98,16 @@ func TestUpdateUserPhoneNumber(t *testing.T) {
 	require.Equal(t, user.Username, updateUser.Username)
 	require.NotEqual(t, user.PhoneNumber, updateUser.PhoneNumber)
 	require.Equal(t, 4, len(updateUser.PhoneNumber))
-	require.Equal(t, user.Password, updateUser.Password)
+	require.Equal(t, user.HashedPassword, updateUser.HashedPassword)
 	require.Equal(t, user.Username, updateUser.Username)
 }
 
 func TestUpdateUserPassword(t *testing.T) {
+	hashedPassword, _ := utils.HashPassword(utils.RandomString(8))
 	user := randomUser(t)
 	params := db.PartialUpdateUserParams{
 		ID:             user.ID,
-		Password:       utils.RandomString(12),
+		Password:       hashedPassword,
 		UpdatePassword: true,
 	}
 	updateUser, err := testQueries.PartialUpdateUser(context.Background(), params)
@@ -115,8 +119,7 @@ func TestUpdateUserPassword(t *testing.T) {
 	require.Equal(t, false, user.IsBanned)
 
 	require.Equal(t, user.Username, updateUser.Username)
-	require.NotEqual(t, user.Password, updateUser.Password)
-	require.Equal(t, 12, len(updateUser.Password))
+	require.NotEqual(t, user.HashedPassword, updateUser.HashedPassword)
 	require.Equal(t, user.PhoneNumber, updateUser.PhoneNumber)
 	require.Equal(t, user.Username, updateUser.Username)
 }

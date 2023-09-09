@@ -27,6 +27,8 @@ sqlc:
 test:
 	go test -v -cover ./...
 
+server:
+	go run cmd/main.go
 
 
-PHONY:  docker_run createDB dropDB docker_exec migrate migrateUP migrateDown sqlc test
+PHONY:  docker_run createDB dropDB docker_exec migrate migrateUP migrateDown sqlc test server

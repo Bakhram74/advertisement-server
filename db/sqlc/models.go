@@ -5,15 +5,16 @@
 package db
 
 import (
-	"github.com/jackc/pgx/v5/pgtype"
+	"time"
 )
 
 type User struct {
-	ID          int64
-	Username    string
-	PhoneNumber string
-	Password    string
-	Role        string
-	IsBanned    bool
-	CreatedAt   pgtype.Timestamptz
+	ID                int64     `json:"id"`
+	Username          string    `json:"username"`
+	PhoneNumber       string    `json:"phone_number"`
+	HashedPassword    string    `json:"hashed_password"`
+	Role              string    `json:"role"`
+	IsBanned          bool      `json:"is_banned"`
+	PasswordChangedAt time.Time `json:"password_changed_at"`
+	CreatedAt         time.Time `json:"created_at"`
 }
