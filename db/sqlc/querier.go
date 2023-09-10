@@ -10,6 +10,7 @@ import (
 
 type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	GetUser(ctx context.Context, phoneNumber string) (User, error)
 	PartialUpdateUser(ctx context.Context, arg PartialUpdateUserParams) (User, error)
 }
 

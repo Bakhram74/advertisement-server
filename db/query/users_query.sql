@@ -4,6 +4,10 @@ INSERT INTO users ("username",
                    "hashed_password")
 VALUES ($1, $2, $3) RETURNING *;
 
+-- name: GetUser :one
+SELECT * FROM users
+WHERE phone_number = $1 LIMIT 1;
+
 
 -- name: PartialUpdateUser :one
 UPDATE users

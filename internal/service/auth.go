@@ -17,3 +17,6 @@ func NewAuthService(repo repository.Authorization) *AuthService {
 func (service *AuthService) CreateUser(ctx context.Context, arg db.CreateUserParams) (db.User, error) {
 	return service.repo.CreateUser(ctx, arg)
 }
+func (service *AuthService) GetUser(ctx context.Context, phoneNumber string) (db.User, error) {
+	return service.repo.GetUser(ctx, phoneNumber)
+}

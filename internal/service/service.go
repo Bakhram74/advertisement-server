@@ -10,6 +10,7 @@ import (
 
 type Authorization interface {
 	CreateUser(ctx context.Context, arg db.CreateUserParams) (db.User, error)
+	GetUser(ctx context.Context, phoneNumber string) (db.User, error)
 }
 
 type Service struct {

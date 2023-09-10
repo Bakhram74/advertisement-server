@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	db "github.com/Bakhram74/advertisement-server.git/db/sqlc"
 	"github.com/Bakhram74/advertisement-server.git/pkg/utils"
 	"github.com/gin-gonic/gin"
@@ -67,6 +68,41 @@ func (h *Handler) signUp(ctx *gin.Context) {
 	rsp := newUserResponse(user)
 	ctx.JSON(http.StatusOK, rsp)
 }
-func (h *Handler) test(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, "test")
+
+type loginUserRequest struct {
+	PhoneNumber string `json:"phone_number" binding:"required"`
+	Password    string `json:"password" binding:"required,min=6"`
+}
+
+type loginUserResponse struct {
+	User userResponse `json:"user"`
+}
+
+func (h *Handler) signIn(ctx *gin.Context) {
+	var req loginUserRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	user, err := h.services.GetUser(ctx, req.PhoneNumber)
+	if err != nil {
+		if errors.Is(err, db.ErrRecordNotFound) {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	err = utils.CheckPassword(req.Password, user.HashedPassword)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+		return
+	}
+
+	rsp := loginUserResponse{
+		User: newUserResponse(user),
+	}
+	ctx.JSON(http.StatusOK, rsp)
 }

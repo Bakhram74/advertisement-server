@@ -22,3 +22,11 @@ func (a AuthRepository) CreateUser(ctx context.Context, arg db.CreateUserParams)
 	}
 	return user, err
 }
+
+func (a AuthRepository) GetUser(ctx context.Context, phoneNumber string) (db.User, error) {
+	user, err := a.store.GetUser(ctx, phoneNumber)
+	if err != nil {
+		return db.User{}, err
+	}
+	return user, err
+}

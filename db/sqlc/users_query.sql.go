@@ -38,6 +38,27 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	return i, err
 }
 
+const getUser = `-- name: GetUser :one
+SELECT id, username, phone_number, hashed_password, role, is_banned, password_changed_at, created_at FROM users
+WHERE phone_number = $1 LIMIT 1
+`
+
+func (q *Queries) GetUser(ctx context.Context, phoneNumber string) (User, error) {
+	row := q.db.QueryRow(ctx, getUser, phoneNumber)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.PhoneNumber,
+		&i.HashedPassword,
+		&i.Role,
+		&i.IsBanned,
+		&i.PasswordChangedAt,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const partialUpdateUser = `-- name: PartialUpdateUser :one
 UPDATE users
 SET username = CASE WHEN $1::boolean THEN $2::TEXT ELSE username END,
