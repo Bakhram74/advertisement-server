@@ -34,6 +34,17 @@ func TestCreateUser(t *testing.T) {
 	randomUser(t)
 }
 
+func TestGetUser(t *testing.T) {
+	user := randomUser(t)
+	gotUser, err := testQueries.GetUser(context.Background(), user.PhoneNumber)
+	require.NoError(t, err)
+
+	require.Equal(t, gotUser.CreatedAt, user.CreatedAt)
+	require.Equal(t, gotUser.Username, user.Username)
+	require.Equal(t, gotUser.HashedPassword, user.HashedPassword)
+	require.Equal(t, gotUser.PhoneNumber, user.PhoneNumber)
+}
+
 func TestUpdateUser(t *testing.T) {
 	user := randomUser(t)
 	hashedPassword, _ := utils.HashPassword(utils.RandomString(8))
