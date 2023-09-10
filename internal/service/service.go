@@ -6,6 +6,8 @@ import (
 	"github.com/Bakhram74/advertisement-server.git/internal/repository"
 )
 
+//go:generate mockgen -source=service.go -destination=mocks/mock.go
+
 type Authorization interface {
 	CreateUser(ctx context.Context, arg db.CreateUserParams) (db.User, error)
 }

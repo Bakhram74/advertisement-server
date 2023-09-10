@@ -30,5 +30,8 @@ test:
 server:
 	go run cmd/main.go
 
+mock:
+	go generate internal/service/service.go
 
-PHONY:  docker_run createDB dropDB docker_exec migrate migrateUP migrateDown sqlc test server
+
+PHONY:  docker_run createDB dropDB docker_exec migrate migrateUP migrateDown sqlc test server mock
