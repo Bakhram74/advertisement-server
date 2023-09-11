@@ -3,7 +3,9 @@ module github.com/Bakhram74/advertisement-server.git
 go 1.20
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.9.1
+	github.com/google/uuid v1.3.1
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/jackc/pgx/v5 v5.4.3
 	github.com/sirupsen/logrus v1.9.3
