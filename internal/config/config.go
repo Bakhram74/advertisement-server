@@ -8,10 +8,8 @@ import (
 )
 
 type Config struct {
-	Host string `json:"host" env-default:"127.0.0.1"`
-	Port string `json:"port" env-default:"8080"`
-
-	Storage StorageConfig `json:"storage"`
+	HttpAddress string        `json:"http_address" env-default:"0.0.0.0:8080"`
+	Storage     StorageConfig `json:"storage"`
 }
 
 type StorageConfig struct {

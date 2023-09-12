@@ -35,8 +35,8 @@ func main() {
 	handlers := handler.NewHandler(services)
 
 	svr := new(advertisement_server.Server)
-	logger.Infof("server is listening port %s:%s", cfg.Host, cfg.Port)
-	if err = svr.Run(cfg.Host, cfg.Port, handlers.InitRoutes()); err != nil {
+	logger.Infof("server is listening address %s", cfg.HttpAddress)
+	if err = svr.Run(cfg.HttpAddress, handlers.InitRoutes()); err != nil {
 		logrus.Fatalf("error occured while running http server: %s", err.Error())
 	}
 
