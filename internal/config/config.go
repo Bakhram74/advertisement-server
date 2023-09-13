@@ -5,20 +5,23 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 	_ "github.com/jackc/pgx/v5"
 	"sync"
+	"time"
 )
 
 type Config struct {
-	HttpAddress string        `json:"http_address" env-default:"0.0.0.0:8080"`
-	Storage     StorageConfig `json:"storage"`
+	HttpAddress         string        `yaml:"http_address" env-default:"0.0.0.0:8080"`
+	TokenSymmetricKey   string        `yaml:"token_symmetric_key"`
+	AccessTokenDuration time.Duration `yaml:"access_token_duration"`
+	Storage             StorageConfig `yaml:"storage"`
 }
 
 type StorageConfig struct {
-	Host     string `json:"host" env-default:"localhost"`
-	Port     string `json:"port" env-default:"5432"`
-	Database string `json:"database" env-default:"advertisement"`
-	Username string `json:"username" env-default:"root"`
-	Password string `json:"password" env-default:"secret"`
-	SSLMode  string `json:"ssl_mode" env-default:"disable"`
+	Host     string `yaml:"host" env-default:"localhost"`
+	Port     string `yaml:"port" env-default:"5432"`
+	Database string `yaml:"database" env-default:"advertisement"`
+	Username string `yaml:"username" env-default:"root"`
+	Password string `yaml:"password" env-default:"secret"`
+	SSLMode  string `yaml:"ssl_mode" env-default:"disable"`
 }
 
 var instance Config
@@ -28,7 +31,7 @@ func GetConfig() *Config {
 	once.Do(func() {
 		logger := logging.GetLogger()
 		logger.Info("read application configuration")
-		err := cleanenv.ReadEnv(&instance)
+		err := cleanenv.ReadConfig("/Users/user/go/src/advertisement-server/config.yml", &instance)
 		if err != nil {
 			help, _ := cleanenv.GetDescription(instance, nil)
 			logger.Info(help)

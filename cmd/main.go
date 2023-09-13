@@ -32,8 +32,10 @@ func main() {
 	store := repository.NewStore(connPool)
 	repos := repository.NewRepository(store)
 	services := service.NewService(repos)
-	handlers := handler.NewHandler(services)
-
+	handlers, err := handler.NewHandler(cfg, services)
+	if err != nil {
+		logger.Fatal(err.Error())
+	}
 	svr := new(advertisement_server.Server)
 	logger.Infof("server is listening address %s", cfg.HttpAddress)
 	if err = svr.Run(cfg.HttpAddress, handlers.InitRoutes()); err != nil {
