@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	db "github.com/Bakhram74/advertisement-server.git/db/sqlc"
+	"github.com/Bakhram74/advertisement-server.git/internal/config"
 	"github.com/Bakhram74/advertisement-server.git/internal/service"
 	mock_service "github.com/Bakhram74/advertisement-server.git/internal/service/mocks"
 	"github.com/Bakhram74/advertisement-server.git/pkg/utils"
@@ -17,6 +18,7 @@ import (
 	"net/http/httptest"
 	"reflect"
 	"testing"
+	"time"
 )
 
 type eqCreateUserParamsMatcher struct {
@@ -142,7 +144,11 @@ func TestCreateUserAPI(t *testing.T) {
 			tc.buildStubs(repo)
 
 			s := &service.Service{Authorization: repo}
-			handler := NewHandler(s)
+			config := config.Config{
+				TokenSymmetricKey:   utils.RandomString(32),
+				AccessTokenDuration: time.Minute,
+			}
+			handler, _ := NewHandler(config, s)
 			recorder := httptest.NewRecorder()
 
 			data, err := json.Marshal(tc.body)

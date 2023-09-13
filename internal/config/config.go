@@ -27,7 +27,7 @@ type StorageConfig struct {
 var instance Config
 var once sync.Once
 
-func GetConfig() *Config {
+func GetConfig() Config {
 	once.Do(func() {
 		logger := logging.GetLogger()
 		logger.Info("read application configuration")
@@ -39,5 +39,5 @@ func GetConfig() *Config {
 		}
 
 	})
-	return &instance
+	return instance
 }

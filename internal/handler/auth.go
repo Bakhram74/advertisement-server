@@ -75,7 +75,8 @@ type loginUserRequest struct {
 }
 
 type loginUserResponse struct {
-	User userResponse `json:"user"`
+	AccessToken string       `json:"access_token"`
+	User        userResponse `json:"user"`
 }
 
 func (h *Handler) signIn(ctx *gin.Context) {
@@ -100,9 +101,18 @@ func (h *Handler) signIn(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
 		return
 	}
+	accessToken, _, err := h.tokenMaker.CreateToken(
+		user.ID,
+		h.config.AccessTokenDuration,
+	)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
 
 	rsp := loginUserResponse{
-		User: newUserResponse(user),
+		AccessToken: accessToken,
+		User:        newUserResponse(user),
 	}
 	ctx.JSON(http.StatusOK, rsp)
 }
