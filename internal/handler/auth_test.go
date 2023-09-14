@@ -148,7 +148,7 @@ func TestCreateUserAPI(t *testing.T) {
 				TokenSymmetricKey:   utils.RandomString(32),
 				AccessTokenDuration: time.Minute,
 			}
-			handler, _ := NewHandler(config, s)
+			handler, _ := NewHandler(&config, s)
 			recorder := httptest.NewRecorder()
 
 			data, err := json.Marshal(tc.body)
@@ -270,7 +270,7 @@ func TestGetUserAPI(t *testing.T) {
 				TokenSymmetricKey:   utils.RandomString(32),
 				AccessTokenDuration: time.Minute,
 			}
-			handler, _ := NewHandler(cfg, s)
+			handler, _ := NewHandler(&cfg, s)
 			recorder := httptest.NewRecorder()
 
 			data, err := json.Marshal(tc.body)

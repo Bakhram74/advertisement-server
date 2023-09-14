@@ -11,10 +11,10 @@ import (
 type Handler struct {
 	tokenMaker token.Maker
 	services   *service.Service
-	config     config.Config
+	config     *config.Config
 }
 
-func NewHandler(config config.Config, services *service.Service) (*Handler, error) {
+func NewHandler(config *config.Config, services *service.Service) (*Handler, error) {
 
 	tokenMaker, err := token.NewJWTMaker(config.TokenSymmetricKey)
 	if err != nil {
