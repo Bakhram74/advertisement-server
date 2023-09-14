@@ -37,7 +37,6 @@ func GetConfig() *Config {
 			logger.Info(help)
 			logger.Fatal(err)
 		}
-
 	})
 	return &instance
 }
