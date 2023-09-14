@@ -34,4 +34,4 @@ mock:
 	go generate internal/service/service.go
 
 
-PHONY:  docker_run createDB dropDB docker_exec migrate migrateUP migrateDown sqlc test server mock
+PHONY:  docker_run createDB dropDB docker_exec migrate migrateUP migrateDown sqlc test server
