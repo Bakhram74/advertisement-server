@@ -1,0 +1,11 @@
+
+http_address: "0.0.0.0:8080"
+token_symmetric_key: "12wccsd323da23cds323cdscdsc23qwe"
+access_token_duration: "15m"
+storage:
+    host: "localhost"
+    port: "5432"
+    username: "root"
+    password: "secret"
+    dbname: "advertisement"
+    sslmode: "disable"
