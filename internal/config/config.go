@@ -10,7 +10,7 @@ import (
 
 type Config struct {
 	HttpAddress         string        `yaml:"http_address" env-default:"0.0.0.0:8080"`
-	TokenSymmetricKey   string        `yaml:"token_symmetric_key"`
+	TokenSymmetricKey   string        `yaml:"token_symmetric_key" env-default:"12wccsd323da23cds323cdscdsc23qwe"`
 	AccessTokenDuration time.Duration `yaml:"access_token_duration"`
 	Storage             StorageConfig `yaml:"storage"`
 }
