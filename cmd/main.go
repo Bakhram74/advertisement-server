@@ -2,22 +2,25 @@ package main
 
 import (
 	"context"
-	advertisement_server "github.com/Bakhram74/advertisement-server.git"
-	"github.com/Bakhram74/advertisement-server.git/internal/config"
+	config "github.com/Bakhram74/advertisement-server.git/internal/config"
 	"github.com/Bakhram74/advertisement-server.git/internal/handler"
 	"github.com/Bakhram74/advertisement-server.git/internal/repository"
 	"github.com/Bakhram74/advertisement-server.git/internal/service"
 	"github.com/Bakhram74/advertisement-server.git/pkg/client/postgresql"
 	"github.com/Bakhram74/advertisement-server.git/pkg/logging"
+	"github.com/Bakhram74/advertisement-server.git/pkg/server"
 	_ "github.com/jackc/pgx/v5"
 	"github.com/sirupsen/logrus"
 )
 
 func main() {
 	logger := logging.GetLogger()
-	cfg := config.GetConfig()
-	storage := cfg.Storage
+	cfg, err := config.LoadConfig(".")
+	if err != nil {
+		logger.Fatal("cannot load config")
+	}
 
+	storage := cfg.Storage
 	connPool, err := postgresql.NewClient(context.TODO(), 3, postgresql.Config{
 		Host:     storage.Host,
 		Port:     storage.Port,
@@ -36,7 +39,7 @@ func main() {
 	if err != nil {
 		logger.Fatal(err.Error())
 	}
-	svr := new(advertisement_server.Server)
+	svr := new(server.Server)
 	logger.Infof("server is listening address %s", cfg.HttpAddress)
 	if err = svr.Run(cfg.HttpAddress, handlers.InitRoutes()); err != nil {
 		logrus.Fatalf("error occured while running http server: %s", err.Error())
