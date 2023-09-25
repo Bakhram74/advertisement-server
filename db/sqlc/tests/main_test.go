@@ -3,24 +3,28 @@ package tests
 import (
 	"context"
 	"fmt"
-	db "github.com/Bakhram74/advertisement-server.git/db/sqlc"
 	"github.com/Bakhram74/advertisement-server.git/internal/config"
-	"github.com/jackc/pgx/v5"
+	"github.com/Bakhram74/advertisement-server.git/internal/repository"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
 	"os"
 	"testing"
 )
 
-var testQueries *db.Queries
+var testStore repository.Store
 
 func TestMain(m *testing.M) {
-	cfg := config.GetConfig()
-	conn, err := pgx.Connect(context.Background(), postgresUrl(cfg.Storage))
+	config, err := config.LoadConfig("../../..")
 	if err != nil {
-		log.Fatalf("Unable to connect to database: %v\n", err)
+		log.Fatal("cannot load config:", err)
 	}
-	defer conn.Close(context.Background())
-	testQueries = db.New(conn)
+
+	connPool, err := pgxpool.New(context.Background(), postgresUrl(config.Storage))
+	if err != nil {
+		log.Fatal("cannot connect to db:", err)
+	}
+
+	testStore = repository.NewStore(connPool)
 	os.Exit(m.Run())
 }
 

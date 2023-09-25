@@ -1,4 +1,4 @@
-package advertisement_server
+package server
 
 import (
 	"net/http"

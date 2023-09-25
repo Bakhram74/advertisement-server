@@ -17,7 +17,7 @@ func randomUser(t *testing.T) db.User {
 		HashedPassword: hashedPassword,
 	}
 
-	user, err := testQueries.CreateUser(context.Background(), arg)
+	user, err := testStore.CreateUser(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotZero(t, user.CreatedAt)
 	require.NotZero(t, user.ID)
@@ -36,7 +36,7 @@ func TestCreateUser(t *testing.T) {
 
 func TestGetUser(t *testing.T) {
 	user := randomUser(t)
-	gotUser, err := testQueries.GetUser(context.Background(), user.PhoneNumber)
+	gotUser, err := testStore.GetUser(context.Background(), user.PhoneNumber)
 	require.NoError(t, err)
 
 	require.Equal(t, gotUser.CreatedAt, user.CreatedAt)
@@ -57,7 +57,7 @@ func TestUpdateUser(t *testing.T) {
 		Password:          hashedPassword,
 		UpdatePassword:    true,
 	}
-	updateUser, err := testQueries.PartialUpdateUser(context.Background(), params)
+	updateUser, err := testStore.PartialUpdateUser(context.Background(), params)
 	require.NoError(t, err)
 
 	require.NotZero(t, user.CreatedAt)
@@ -79,7 +79,7 @@ func TestUpdateUserName(t *testing.T) {
 		Username:       "Pedro",
 		UpdateUsername: true,
 	}
-	updateUser, err := testQueries.PartialUpdateUser(context.Background(), params)
+	updateUser, err := testStore.PartialUpdateUser(context.Background(), params)
 	require.NoError(t, err)
 	require.NotZero(t, user.CreatedAt)
 	require.NotZero(t, user.ID)
@@ -98,7 +98,7 @@ func TestUpdateUserPhoneNumber(t *testing.T) {
 		PhoneNumber:       utils.RandomNumbers(4),
 		UpdatePhoneNumber: true,
 	}
-	updateUser, err := testQueries.PartialUpdateUser(context.Background(), params)
+	updateUser, err := testStore.PartialUpdateUser(context.Background(), params)
 	require.NoError(t, err)
 
 	require.NotZero(t, user.CreatedAt)
@@ -121,7 +121,7 @@ func TestUpdateUserPassword(t *testing.T) {
 		Password:       hashedPassword,
 		UpdatePassword: true,
 	}
-	updateUser, err := testQueries.PartialUpdateUser(context.Background(), params)
+	updateUser, err := testStore.PartialUpdateUser(context.Background(), params)
 	require.NoError(t, err)
 
 	require.NotZero(t, user.CreatedAt)
