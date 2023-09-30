@@ -39,13 +39,13 @@ func newUserResponse(user db.User) userResponse {
 func (h *Handler) signUp(ctx *gin.Context) {
 	var req createUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		ctx.JSON(http.StatusBadRequest, errorResponse("Invalid json provided", err))
 		return
 	}
 
 	hashedPassword, err := utils.HashPassword(req.Password)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(http.StatusInternalServerError, errorResponse("Server error", err))
 		return
 	}
 
@@ -58,10 +58,10 @@ func (h *Handler) signUp(ctx *gin.Context) {
 	user, err := h.services.CreateUser(ctx, arg)
 	if err != nil {
 		if db.ErrorCode(err) == db.UniqueViolation {
-			ctx.JSON(http.StatusForbidden, errorResponse(err))
+			ctx.JSON(http.StatusForbidden, err)
 			return
 		}
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(http.StatusInternalServerError, errorResponse("Server error", err))
 		return
 	}
 
@@ -82,23 +82,23 @@ type loginUserResponse struct {
 func (h *Handler) signIn(ctx *gin.Context) {
 	var req loginUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		ctx.JSON(http.StatusBadRequest, errorResponse("Invalid json provided", err))
 		return
 	}
 
 	user, err := h.services.GetUser(ctx, req.PhoneNumber)
 	if err != nil {
 		if errors.Is(err, db.ErrRecordNotFound) {
-			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			ctx.JSON(http.StatusNotFound, errorResponse("Please provide valid login details", err))
 			return
 		}
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(http.StatusInternalServerError, errorResponse("Server error", err))
 		return
 	}
 
 	err = utils.CheckPassword(req.Password, user.HashedPassword)
 	if err != nil {
-		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+		ctx.JSON(http.StatusUnauthorized, errorResponse("Please provide valid login details", err))
 		return
 	}
 	accessToken, _, err := h.tokenMaker.CreateToken(
@@ -106,7 +106,7 @@ func (h *Handler) signIn(ctx *gin.Context) {
 		h.config.AccessTokenDuration,
 	)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(http.StatusInternalServerError, errorResponse("Server error", err))
 		return
 	}
 

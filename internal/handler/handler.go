@@ -41,6 +41,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	return router
 }
 
-func errorResponse(err error) gin.H {
-	return gin.H{"error": err.Error()}
+func errorResponse(msg string, err error) gin.H {
+	return gin.H{msg: err.Error()}
 }
