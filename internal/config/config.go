@@ -6,10 +6,11 @@ import (
 )
 
 type Config struct {
-	HttpAddress         string        `mapstructure:"http_address"`
-	TokenSymmetricKey   string        `mapstructure:"token_symmetric_key"`
-	AccessTokenDuration time.Duration `mapstructure:"access_token_duration"`
-	Storage             StorageConfig `mapstructure:"storage"`
+	HttpAddress          string        `mapstructure:"http_address"`
+	TokenSymmetricKey    string        `mapstructure:"token_symmetric_key"`
+	AccessTokenDuration  time.Duration `mapstructure:"access_token_duration"`
+	RefreshTokenDuration time.Duration `mapstructure:"refresh_token_duration"`
+	Storage              StorageConfig `mapstructure:"storage"`
 }
 type StorageConfig struct {
 	Host     string `mapstructure:"host"`
